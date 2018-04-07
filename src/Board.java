@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.stream.IntStream;
 
 public class Board {
@@ -134,7 +135,12 @@ public class Board {
                 if (j == 0 || j == 3 || j == 6) {
                     System.out.print("|\t");
                 }
-                System.out.print(this.getTile(i + 1, j + 1) + "\t");
+                int value = this.getTile(i + 1, j + 1);
+                if (value == 0) {
+                    System.out.print(" \t");
+                } else {
+                    System.out.print(value + "\t");
+                }
             }
             System.out.print("|");
             System.out.print("\n");
@@ -146,31 +152,134 @@ public class Board {
 
     public boolean isValidRow(int row) {
         int[] elements = this.getRow(row);
-        return IntStream.of(elements).filter(i -> i > 0).count() > IntStream.of(elements).filter(i -> i > 0).distinct().count();
+        return IntStream.of(elements).filter(i -> i > 0).count() == IntStream.of(elements).filter(i -> i > 0).distinct().count();
     }
 
     public boolean isValidColumn(int column) {
         int[] elements = this.getColumn(column);
-        return IntStream.of(elements).filter(i -> i > 0).count() > IntStream.of(elements).filter(i -> i > 0).distinct().count();
+        return IntStream.of(elements).filter(i -> i > 0).count() == IntStream.of(elements).filter(i -> i > 0).distinct().count();
     }
 
     public boolean isValidRegion(int region) {
         int[] elements = this.getRegion(region);
-        return IntStream.of(elements).filter(i -> i > 0).count() > IntStream.of(elements).filter(i -> i > 0).distinct().count();
+        return IntStream.of(elements).filter(i -> i > 0).count() == IntStream.of(elements).filter(i -> i > 0).distinct().count();
     }
 
     public boolean isValidBoard() {
         for (int i = 0; i < 9; i++) {
-            if (!isValidRow(i)) {
+            if (!isValidRow(i + 1)) {
                 return false;
             }
-            if (!isValidColumn(i)) {
+            if (!isValidColumn(i + 1)) {
                 return false;
             }
-            if (!isValidRegion(i)) {
+            if (!isValidRegion(i + 1)) {
                 return false;
             }
         }
         return true;
+    }
+    
+    public boolean isFilledRow(int row) {
+        int[] elements = this.getRow(row);
+        return IntStream.of(elements).filter(x -> x > 0).count() == 0;
+    }
+    
+    public boolean isFilledColumn(int column) {
+        int[] elements = this.getColumn(column);
+        return IntStream.of(elements).filter(x -> x > 0).count() == 0;
+    }
+    
+    public boolean isFilledRegion(int region) {
+        int[] elements = this.getRegion(region);
+        return IntStream.of(elements).filter(x -> x > 0).count() == 0;
+    }
+    
+    public boolean isFilledBoard() {
+        for (int i = 0; i < 9; i++) {
+            if (!isFilledRow(i)) {
+                return false;
+            }
+            if (!isFilledColumn(i)) {
+                return false;
+            }
+            if (!isFilledRegion(i)) {
+                return false;
+            }
+        }
+        return true;
+    }
+    
+    public Board solve() {
+        Board copy = new Board(this.getTiles());
+        ArrayList<int[]> emptyTiles = new ArrayList<>();
+        for (int i = 0; i < 9; i++) {
+            for (int j = 0; j < 9; j++) {
+                int tile = copy.getTile(i + 1, j + 1);
+                if (tile == 0) {
+                    emptyTiles.add(new int[]{i + 1, j + 1});
+                }
+            }
+        }
+        
+        for (int i = 0; i < emptyTiles.size(); i++) {
+            int r = emptyTiles.get(i)[0];
+            int c = emptyTiles.get(i)[1];
+            int value = copy.getTile(r, c);
+            
+            if (value == 9) {
+                copy.setTile(r, c, 0);
+                i -= 2;
+                continue;
+            }
+            
+            for (int j = value; j < 10; j++) {
+                if (copy.isValidBoard()) {
+                    break;
+                }
+                
+                if (j == 9) {
+                    // go to previous empty tile
+                    // increment by 1
+                    // if value is 9
+                        // set to 0
+                        // decrement i
+                        // increment i by 1
+                    
+                    i -= 2;
+                    break;
+                }
+            }
+        }
+        
+        
+        for (int i = 0; i < emptyTiles.size(); i++) {
+            int value = copy.getTile(emptyTiles.get(i)[0], emptyTiles.get(i)[1]);
+            if (value > 0) {
+                value--;
+            }
+            for (int j = value; j < 9; j++) {
+                if (value != 0) {
+                    copy.setTile(emptyTiles.get(i)[0], emptyTiles.get(i)[1], j);
+                    continue;
+                } else {
+                    copy.setTile(emptyTiles.get(i)[0], emptyTiles.get(i)[1], j + 1);
+                }
+                this.display();
+                System.out.println("");
+                System.out.println("Valid:" + copy.isValidBoard());
+                if (copy.isValidBoard()) {
+                    break;
+                }
+                if (j + 1 == 9) {
+                    copy.setTile(emptyTiles.get(i)[0], emptyTiles.get(i)[1], 0);
+                    System.out.println("waiting");
+                    i -= 2;
+                }
+            }
+            //this.display();
+            //System.out.println("");
+        }
+        return copy;
     }
 }
