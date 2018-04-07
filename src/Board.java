@@ -221,64 +221,36 @@ public class Board {
                 }
             }
         }
-        
+
         for (int i = 0; i < emptyTiles.size(); i++) {
             int r = emptyTiles.get(i)[0];
             int c = emptyTiles.get(i)[1];
             int value = copy.getTile(r, c);
-            
+
             if (value == 9) {
                 copy.setTile(r, c, 0);
+
+                copy.display();
+                System.out.println();
+
                 i -= 2;
                 continue;
             }
-            
-            for (int j = value; j < 10; j++) {
-                if (copy.isValidBoard()) {
-                    break;
-                }
-                
-                if (j == 9) {
-                    // go to previous empty tile
-                    // increment by 1
-                    // if value is 9
-                        // set to 0
-                        // decrement i
-                        // increment i by 1
-                    
-                    i -= 2;
-                    break;
-                }
-            }
-        }
-        
-        
-        for (int i = 0; i < emptyTiles.size(); i++) {
-            int value = copy.getTile(emptyTiles.get(i)[0], emptyTiles.get(i)[1]);
-            if (value > 0) {
-                value--;
-            }
+
             for (int j = value; j < 9; j++) {
-                if (value != 0) {
-                    copy.setTile(emptyTiles.get(i)[0], emptyTiles.get(i)[1], j);
-                    continue;
-                } else {
-                    copy.setTile(emptyTiles.get(i)[0], emptyTiles.get(i)[1], j + 1);
-                }
-                this.display();
-                System.out.println("");
-                System.out.println("Valid:" + copy.isValidBoard());
+                copy.setTile(r, c, j + 1);
+
+                copy.display();
+                System.out.println();
+
                 if (copy.isValidBoard()) {
                     break;
                 }
                 if (j + 1 == 9) {
-                    copy.setTile(emptyTiles.get(i)[0], emptyTiles.get(i)[1], 0);
-                    System.out.println("waiting");
+                    copy.setTile(r, c, 0);
                     i -= 2;
                 }
             }
-            //this.display();
-            //System.out.println("");
         }
         return copy;
     }
