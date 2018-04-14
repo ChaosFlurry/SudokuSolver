@@ -8,9 +8,7 @@ public class Board {
         this.tiles = new int[9][9];
         this.tiles = tiles;
     }
-
-    // All arguments are 1-indexed
-    // 0s in the array stand for blank spaces
+    
     public int[][] getTiles() {
         return tiles;
     }
@@ -232,7 +230,7 @@ public class Board {
 
                 copy.display();
                 System.out.println();
-
+                
                 i -= 2;
                 continue;
             }
@@ -242,7 +240,7 @@ public class Board {
 
                 copy.display();
                 System.out.println();
-
+    
                 if (copy.isValidBoard()) {
                     break;
                 }
