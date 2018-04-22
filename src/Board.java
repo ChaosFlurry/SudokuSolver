@@ -1,3 +1,5 @@
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.stream.IntStream;
 
@@ -209,6 +211,7 @@ public class Board {
     }
     
     public Board solve() {
+        LocalDateTime start = LocalDateTime.now();
         Board copy = new Board(this.getTiles());
         ArrayList<int[]> emptyTiles = new ArrayList<>();
         for (int i = 0; i < 9; i++) {
@@ -250,6 +253,12 @@ public class Board {
                 }
             }
         }
+        LocalDateTime end = LocalDateTime.now();
+        Duration elapsed = Duration.between(start, end);
+        double seconds = elapsed.toMillis() / 1000.0;
+
+        copy.display();
+        System.out.println("Elapsed: " + seconds + " seconds.");
         return copy;
     }
 }

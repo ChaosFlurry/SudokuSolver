@@ -4,7 +4,7 @@ import java.io.InputStreamReader;
 
 public class Sudoku {
     /*
-    Test Board:
+    Test Board 1:
     530070000
     600195000
     098000060
@@ -25,6 +25,28 @@ public class Sudoku {
     961537284
     287419635
     345286179
+
+    Test Board 2:
+    061007003
+    092003000
+    000000000
+    008530000
+    000000504
+    500008000
+    040000001
+    000160800
+    600000000
+
+    Solution:
+    461987253
+    792453168
+    385216479
+    128534796
+    936721584
+    574698312
+    849375621
+    253169847
+    617842935
      */
     
     public static void main(String[] args) {
@@ -45,7 +67,6 @@ public class Sudoku {
             }
         }
         Board test = new Board(tiles);
-        test.display();
         test.solve();
     }
 }
